@@ -67,7 +67,7 @@
 }
 /// 停止直播
 -(void)stopLive:(NSDictionary *)param result:(FlutterResult)result{
-    if(self.session && self.session.state == LFLiveStart){
+    if(self.session){
         @try {
             [self.session stopLive];
             if(result){
@@ -78,11 +78,15 @@
                 result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
             }
         }
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 /// 暂停
 -(void)pauseLive:(NSDictionary *)param result:(FlutterResult)result{
-    if(self.session && self.session.state == LFLiveStart){
+    if(self.session){
         @try {
             [self.session stopLive];
             if(result){
@@ -94,6 +98,10 @@
             }
         }
         
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 /// 恢复
@@ -107,6 +115,10 @@
             if(result)
                 result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
         }
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 
@@ -127,6 +139,10 @@
             if(result)
                 result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
         }
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 
