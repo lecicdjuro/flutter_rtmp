@@ -25,6 +25,7 @@ class RtmpManager {
 
   /// premission state
   bool _permissionEnable;
+
   bool get permissionEnable => _permissionEnable ?? false;
 
   /// permission check
@@ -132,10 +133,11 @@ class RtmpManager {
   }
 
   /// destroy
-  Future dispose() async {
-    await _configChannel.invokeMethod("dispose", {});
+  Future<RtmpResponse> dispose() async {
     _platformView = null;
     _globalKey = null;
+    return RtmpResponse.fromData(
+        await _configChannel.invokeMethod("dispose", {}));
   }
 
   ///切换摄像头
@@ -165,6 +167,7 @@ class RtmpManager {
 
   GlobalKey _globalKey = GlobalKey();
   Widget _platformView;
+
   Widget view() {
     if (_platformView == null) {
       print("[RTMP] get platformview");
