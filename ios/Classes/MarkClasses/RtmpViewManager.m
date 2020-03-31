@@ -49,25 +49,26 @@
     }
 }
 
+
 -(void)dispose:(NSDictionary *)param result:(FlutterResult)result{
-       if(self.session){
-            @try {
-             [self.session stopLive];
-              self.session.preView = nil;
-              _session = nil;
-               if(result){
-                      result(Response.successfulResponse.mj_JSONObject);
-                  }
-            } @catch (NSException *exception) {
-                if(result){
-                    result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
-                }
-            }else{
-             if(result){
-                    result([Response failResponse:[NSString stringWithFormat:@"%@",'exception no self session']].mj_JSONObject);
-                }
+    if(self.session){
+        @try {
+            [self.session stopLive];
+            self.session.preView = nil;
+            _session = nil;
+            if(result){
+                result(Response.successfulResponse.mj_JSONObject);
             }
-}
+        } @catch (NSException *exception) {
+            if(result){
+                result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
+            }
+        }
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
+    }
 }
 /// 基础配置:配置回调
 -(void)initConfig:(NSDictionary *)param result:(FlutterResult)result{
