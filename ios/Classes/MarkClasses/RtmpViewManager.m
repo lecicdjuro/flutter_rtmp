@@ -68,6 +68,7 @@
                 }
             }
 }
+}
 /// 基础配置:配置回调
 -(void)initConfig:(NSDictionary *)param result:(FlutterResult)result{
     
