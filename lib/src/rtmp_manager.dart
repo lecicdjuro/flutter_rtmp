@@ -132,10 +132,11 @@ class RtmpManager {
   }
 
   /// destroy
-  Future dispose() async {
-    await _configChannel.invokeMethod("dispose", {});
+  Future<RtmpResponse> dispose() async {
     _platformView = null;
     _globalKey = null;
+    return RtmpResponse.fromData(
+        await _configChannel.invokeMethod("dispose", {}));
   }
 
   ///切换摄像头
