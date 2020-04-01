@@ -1,4 +1,4 @@
-include ':app', ':libWSLive'
+include ':app', ':libWSLive-release'
 
 def flutterProjectRoot = rootProject.projectDir.parentFile.toPath()
 
