@@ -3,7 +3,10 @@ import 'dart:async';
 
 import 'package:flutter_rtmp/flutter_rtmp.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -17,10 +20,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    super.initState();
     _manager = RtmpManager(onCreated: () {
       print("--- view did created ---");
     });
+    super.initState();
   }
 
   @override
@@ -43,8 +46,7 @@ class _MyAppState extends State<MyApp> {
                     IconButton(
                       icon: Icon(Icons.play_arrow),
                       onPressed: () {
-                        _manager.living(
-                            url: "<rtmp address>");
+                        _manager.living(url: "<rtmp address>");
                         if (_timer == null)
                           _timer ??= Timer.periodic(Duration(seconds: 1), (_) {
                             setState(() {

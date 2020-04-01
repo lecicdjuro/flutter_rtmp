@@ -48,6 +48,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-
-//    implementation project(":libWSLive")
 }
