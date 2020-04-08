@@ -48,6 +48,25 @@
         if(result)result([response mj_JSONObject]);
     }
 }
+
+
+-(void)dispose:(NSDictionary *)param result:(FlutterResult)result{
+        @try {
+            NSLog(@"--- dispose session ---");
+
+            [self initConfig:nil result:nil];
+            self.session.preView = nil;
+            self.session = nil;
+            _session = nil;
+            if(result){
+                result(Response.successfulResponse.mj_JSONObject);
+            }
+        } @catch (NSException *exception) {
+            if(result){
+                result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
+            }
+        }
+}
 /// 基础配置:配置回调
 -(void)initConfig:(NSDictionary *)param result:(FlutterResult)result{
     
@@ -67,7 +86,7 @@
 }
 /// 停止直播
 -(void)stopLive:(NSDictionary *)param result:(FlutterResult)result{
-    if(self.session && self.session.state == LFLiveStart){
+    if(self.session){
         @try {
             [self.session stopLive];
             if(result){
@@ -78,11 +97,15 @@
                 result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
             }
         }
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 /// 暂停
 -(void)pauseLive:(NSDictionary *)param result:(FlutterResult)result{
-    if(self.session && self.session.state == LFLiveStart){
+    if(self.session){
         @try {
             [self.session stopLive];
             if(result){
@@ -94,6 +117,10 @@
             }
         }
         
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 /// 恢复
@@ -107,6 +134,10 @@
             if(result)
                 result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
         }
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 
@@ -127,6 +158,10 @@
             if(result)
                 result([Response failResponse:[NSString stringWithFormat:@"%@",exception]].mj_JSONObject);
         }
+    }else{
+        if(result){
+                       result([Response failResponse:[NSString stringWithFormat:@"%@",'exception']].mj_JSONObject);
+                   }
     }
 }
 
