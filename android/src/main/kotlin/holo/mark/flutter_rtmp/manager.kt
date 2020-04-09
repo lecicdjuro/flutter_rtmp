@@ -28,7 +28,7 @@ class RtmpFactory : PlatformViewFactory(StandardMessageCodec()) {
     }
 
     fun onDestroy() {
-        view?.dispose()
+        rtmpView?.dispose()
     }
 }
 
