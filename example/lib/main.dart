@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () {
                         _manager.living(
                             url:
-                                'rtmp://18.200.134.61:1935/livestream/78efe09c-7987-11ea-81f3-bf6b9e420072');
+                                'rtmp://54.154.40.185:1935/livestream/c4126c8c-7a42-11ea-a008-cb4fa9000c9b');
                         if (_timer == null)
                           _timer ??= Timer.periodic(Duration(seconds: 1), (_) {
                             setState(() {

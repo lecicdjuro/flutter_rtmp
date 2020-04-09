@@ -61,6 +61,7 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
     init {
         _context = context
         preVie = StreamLiveCameraView(context)
+        preVie?.addStreamStateListener(this)
         config = RtmpConfig()
         _initPublisher()
         /// 注册配置回调方法
@@ -77,7 +78,7 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
     }
 
     override fun onCloseConnectionResult(result: Int) {
-        preVie = null
+        println("[ RTMP ] onCloseConnectionResult $result")
     }
 
     fun _initPublisher() {
@@ -85,7 +86,6 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
             preVie = StreamLiveCameraView(_context)
         val option: StreamAVOption = StreamAVOption()
         preVie?.init(_context, option)
-        preVie?.addStreamStateListener(this)
     }
 
     //--------------------------- public ---------------------------
@@ -100,9 +100,14 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
     }
 
     fun dispose() {
-        stopAction()
-        preVie?.destroy()
+        try {
+            preVie?.stopRecord()
+            preVie?.stopStreaming()
+            preVie?.destroy()
 
+        } catch (e: Exception) {
+            println("[ RTMP ] dispose error : $e")
+        }
     }
 
     //--------------------------- private ---------------------------
@@ -255,6 +260,7 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
             resumeLive(result)
         } else if (call.method.equals("dispose")) {
             dispose()
+            result.success(Response().succeessful())
         } else if (call.method.equals("cameraRatio")) {
             getCameraRatio(result)
         } else if (call.method.equals("switchCamera")) {
