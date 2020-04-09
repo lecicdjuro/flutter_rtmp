@@ -18,9 +18,10 @@ import java.net.SocketException
 import kotlin.math.log
 import kotlin.math.max
 import kotlin.math.min
+import me.lake.librestreaming.core.listener.RESConnectionListener
 
 class RtmpFactory : PlatformViewFactory(StandardMessageCodec()) {
-//    var view: RtmpView?= null
+    //    var view: RtmpView?= null
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
         return RtmpView(context)
     }
@@ -45,7 +46,7 @@ class RtmpView(context: Context?) : PlatformView {
     }
 }
 
-class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
+class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.MethodCallHandler {
 
     private var preVie: StreamLiveCameraView?
     private var config: RtmpConfig
@@ -62,11 +63,25 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
         MethodChannel(FlutterRtmpPlugin.registrar.messenger(), DEF_CAMERA_SETTING_CONFIG).setMethodCallHandler(this)
     }
 
+
+    override fun onOpenConnectionResult(result: Int) {
+        println("[ RTMP ]  Erroro nOpenConnectionResult result")
+    }
+
+    override fun onWriteError(errno: Int) {
+        println("[ RTMP ] onWriteError $errno")
+    }
+
+    override fun onCloseConnectionResult(result: Int) {
+        println("[ RTMP ] onCloseConnectionResult  $result")
+    }
+
     fun _initPublisher() {
         if (preVie == null)
             preVie = StreamLiveCameraView(_context)
         val option: StreamAVOption = StreamAVOption()
         preVie?.init(_context, option)
+        preVie?.addStreamStateListener(this)
     }
 
     //--------------------------- public ---------------------------
