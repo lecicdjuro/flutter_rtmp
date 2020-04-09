@@ -21,9 +21,13 @@ import kotlin.math.min
 import me.lake.librestreaming.core.listener.RESConnectionListener
 
 class RtmpFactory : PlatformViewFactory(StandardMessageCodec()) {
-    //    var view: RtmpView?= null
+    var view: RtmpView? = null
     override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
-        return RtmpView(context)
+        view = RtmpView(context)
+    }
+
+    fun onDestroy() {
+        view.dispose()
     }
 }
 
@@ -34,7 +38,6 @@ class RtmpView(context: Context?) : PlatformView {
     override fun dispose() {
         if (_manager != null) {
             _manager?.dispose()
-            _manager = null
         }
     }
 
@@ -73,7 +76,7 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
     }
 
     override fun onCloseConnectionResult(result: Int) {
-        println("[ RTMP ] onCloseConnectionResult  $result")
+        preVie = null
     }
 
     fun _initPublisher() {
@@ -98,7 +101,7 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
     fun dispose() {
         stopAction()
         preVie?.destroy()
-        preVie = null
+
     }
 
     //--------------------------- private ---------------------------
