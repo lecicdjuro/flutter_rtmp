@@ -22,7 +22,7 @@ import me.lake.librestreaming.core.listener.RESConnectionListener
 
 class RtmpFactory : PlatformViewFactory(StandardMessageCodec()) {
     var rtmpView: RtmpView? = null
-    override fun create(context: Context?, viewId: Int, args: Any?): RtmpView {
+    override fun create(context: Context?, viewId: Int, args: Any?): RtmpView? {
         rtmpView = RtmpView(context)
         return rtmpView
     }
