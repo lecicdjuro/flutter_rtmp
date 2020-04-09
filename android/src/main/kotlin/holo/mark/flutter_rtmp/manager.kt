@@ -21,9 +21,9 @@ import kotlin.math.min
 import me.lake.librestreaming.core.listener.RESConnectionListener
 
 class RtmpFactory : PlatformViewFactory(StandardMessageCodec()) {
-    var view: RtmpView? = null
-    override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
-        view = RtmpView(context)
+    var rtmpView: RtmpView? = null
+    override fun create(context: Context?, viewId: Int, args: Any?): RtmpView {
+        rtmpView = RtmpView(context)
         return view
     }
 
