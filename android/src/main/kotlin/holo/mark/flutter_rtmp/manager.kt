@@ -24,7 +24,7 @@ class RtmpFactory : PlatformViewFactory(StandardMessageCodec()) {
     var rtmpView: RtmpView? = null
     override fun create(context: Context?, viewId: Int, args: Any?): RtmpView {
         rtmpView = RtmpView(context)
-        return view
+        return rtmpView
     }
 
     fun onDestroy() {
