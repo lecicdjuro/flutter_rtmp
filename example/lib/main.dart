@@ -1,13 +1,43 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_rtmp/flutter_rtmp.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(FirstScreen());
 
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
+}
+
+class FirstScreen extends StatefulWidget {
+  @override
+  _FState createState() => _FState();
+}
+
+class _FState extends State<FirstScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+      body: FirstWidget(),
+    ));
+  }
+}
+
+class FirstWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: RaisedButton(
+        child: Text('Open stream'),
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (c) => MyApp()));
+        },
+      ),
+    );
+  }
 }
 
 class _MyAppState extends State<MyApp> {
@@ -21,14 +51,18 @@ class _MyAppState extends State<MyApp> {
       print("--- view did created ---");
     });
     super.initState();
+  }
 
+  @override
+  void dispose() {
+    _manager.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          body: Center(
+    return Scaffold(
+      body: Center(
         child: SafeArea(
           child: Stack(
             fit: StackFit.expand,
@@ -45,7 +79,8 @@ class _MyAppState extends State<MyApp> {
                       icon: Icon(Icons.play_arrow),
                       onPressed: () {
                         _manager.living(
-                            url: "<rtmp address>");
+                            url:
+                                'rtmp://18.200.134.61:1935/livestream/78efe09c-7987-11ea-81f3-bf6b9e420072');
                         if (_timer == null)
                           _timer ??= Timer.periodic(Duration(seconds: 1), (_) {
                             setState(() {
@@ -66,6 +101,12 @@ class _MyAppState extends State<MyApp> {
                       },
                     ),
                     IconButton(
+                      icon: Icon(Icons.stop),
+                      onPressed: () {
+                        _manager.stopLive();
+                      },
+                    ),
+                    IconButton(
                       icon: Icon(Icons.switch_camera),
                       onPressed: () {
                         _manager.switchCamera();
@@ -83,7 +124,7 @@ class _MyAppState extends State<MyApp> {
             ],
           ),
         ),
-      )),
+      ),
     );
   }
 }
