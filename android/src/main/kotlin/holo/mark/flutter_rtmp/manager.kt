@@ -50,7 +50,7 @@ class RtmpView(context: Context?) : PlatformView {
     }
 }
 
-class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.MethodCallHandler {
+class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
 
     private var preVie: StreamLiveCameraView?
     private var config: RtmpConfig
@@ -61,24 +61,10 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
     init {
         _context = context
         preVie = StreamLiveCameraView(context)
-        preVie?.addStreamStateListener(this)
         config = RtmpConfig()
         _initPublisher()
         /// 注册配置回调方法
         MethodChannel(FlutterRtmpPlugin.registrar.messenger(), DEF_CAMERA_SETTING_CONFIG).setMethodCallHandler(this)
-    }
-
-
-    override fun onOpenConnectionResult(result: Int) {
-        println("[ RTMP ]  Erroro nOpenConnectionResult result")
-    }
-
-    override fun onWriteError(errno: Int) {
-        println("[ RTMP ] onWriteError $errno")
-    }
-
-    override fun onCloseConnectionResult(result: Int) {
-        println("[ RTMP ] onCloseConnectionResult $result")
     }
 
     fun _initPublisher() {
@@ -104,7 +90,6 @@ class RtmpManager(context: Context?) : RESConnectionListener, MethodChannel.Meth
             preVie?.stopRecord()
             preVie?.stopStreaming()
             preVie?.destroy()
-
         } catch (e: Exception) {
             println("[ RTMP ] dispose error : $e")
         }
