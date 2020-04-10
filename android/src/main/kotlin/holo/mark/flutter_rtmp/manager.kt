@@ -60,11 +60,11 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
 
     init {
         _context = context
+        MethodChannel(FlutterRtmpPlugin.registrar.messenger(), DEF_CAMERA_SETTING_CONFIG).setMethodCallHandler(this)
+
         preVie = StreamLiveCameraView(context)
         config = RtmpConfig()
         _initPublisher()
-        /// 注册配置回调方法
-        MethodChannel(FlutterRtmpPlugin.registrar.messenger(), DEF_CAMERA_SETTING_CONFIG).setMethodCallHandler(this)
     }
 
     fun _initPublisher() {
@@ -87,9 +87,9 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
 
     fun dispose() {
         try {
-            preVie?.stopRecord()
-            preVie?.stopStreaming()
-            preVie?.destroy()
+//            preVie?.stopRecord()
+//            preVie?.stopStreaming()
+            preVie == null
         } catch (e: Exception) {
             println("[ RTMP ] dispose error : $e")
         }
@@ -135,7 +135,9 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
             if (!previewAction()) {
                 return false
             }
-
+            if (preVie == null) {
+                _initPublisher()
+            }
             preVie?.startStreaming(loger.rtmpUrl)
         } catch (e: Exception) {
             return false

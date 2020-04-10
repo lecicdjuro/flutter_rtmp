@@ -55,7 +55,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Future<void> dispose() async {
-    await _manager.dispose();
+    _manager.dispose();
+    _manager = null;
     super.dispose();
   }
 
@@ -80,13 +81,7 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () {
                         _manager.living(
                             url:
-                                'rtmp://52.213.80.80:1935/livestream/b3e83bd2-7a4e-11ea-be41-e3915e8e9ed3');
-                        if (_timer == null)
-                          _timer ??= Timer.periodic(Duration(seconds: 1), (_) {
-                            setState(() {
-                              count += 1;
-                            });
-                          });
+                                'rtmp://108.128.39.225:1935/livestream/8f59cbfe-7b0d-11ea-af1f-6f7a7fc77ca0');
                       },
                     ),
                     IconButton(
