@@ -18,11 +18,17 @@ import java.net.SocketException
 import kotlin.math.log
 import kotlin.math.max
 import kotlin.math.min
+import me.lake.librestreaming.core.listener.RESConnectionListener
 
 class RtmpFactory : PlatformViewFactory(StandardMessageCodec()) {
-//    var view: RtmpView?= null
-    override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
-        return RtmpView(context)
+    var rtmpView: RtmpView? = null
+    override fun create(context: Context?, viewId: Int, args: Any?): RtmpView? {
+        rtmpView = RtmpView(context)
+        return rtmpView
+    }
+
+    fun onDestroy() {
+        rtmpView?.dispose()
     }
 }
 
@@ -33,7 +39,6 @@ class RtmpView(context: Context?) : PlatformView {
     override fun dispose() {
         if (_manager != null) {
             _manager?.dispose()
-            _manager = null
         }
     }
 
@@ -55,11 +60,11 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
 
     init {
         _context = context
+        MethodChannel(FlutterRtmpPlugin.registrar.messenger(), DEF_CAMERA_SETTING_CONFIG).setMethodCallHandler(this)
+
         preVie = StreamLiveCameraView(context)
         config = RtmpConfig()
         _initPublisher()
-        /// 注册配置回调方法
-        MethodChannel(FlutterRtmpPlugin.registrar.messenger(), DEF_CAMERA_SETTING_CONFIG).setMethodCallHandler(this)
     }
 
     fun _initPublisher() {
@@ -81,9 +86,13 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
     }
 
     fun dispose() {
-        stopAction()
-        preVie?.destroy()
-        preVie = null
+        try {
+//            preVie?.stopRecord()
+//            preVie?.stopStreaming()
+            preVie == null
+        } catch (e: Exception) {
+            println("[ RTMP ] dispose error : $e")
+        }
     }
 
     //--------------------------- private ---------------------------
@@ -126,7 +135,9 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
             if (!previewAction()) {
                 return false
             }
-
+            if (preVie == null) {
+                _initPublisher()
+            }
             preVie?.startStreaming(loger.rtmpUrl)
         } catch (e: Exception) {
             return false
@@ -236,6 +247,7 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
             resumeLive(result)
         } else if (call.method.equals("dispose")) {
             dispose()
+            result.success(Response().succeessful())
         } else if (call.method.equals("cameraRatio")) {
             getCameraRatio(result)
         } else if (call.method.equals("switchCamera")) {
