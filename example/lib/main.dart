@@ -40,24 +40,43 @@ class FirstWidget extends StatelessWidget {
   }
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   RtmpManager _manager;
   int count = 0;
   Timer _timer;
-
+  AppLifecycleState oldState;
+  String url = 'rtmp://63.32.87.150:1935/livestream/04e96cb8-7d56-11ea-9e4f-1387759d23f8';
   @override
   void initState() {
+    super.initState();
     _manager = RtmpManager(onCreated: () {
       print("--- view did created ---");
     });
-    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
+    _manager.stopLive();
     _manager.dispose();
     _manager = null;
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('STATE $state');
+    if (AppLifecycleState.paused == state) {
+      _manager.stopLive();
+      print('STOPPED');
+    } else if (AppLifecycleState.resumed == state &&
+        oldState == AppLifecycleState.paused) {
+      _manager.living(
+          url:url);
+      print('RESUMED');
+    }
+    oldState = state;
   }
 
   @override
@@ -81,7 +100,7 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () {
                         _manager.living(
                             url:
-                                'rtmp://108.128.39.225:1935/livestream/8f59cbfe-7b0d-11ea-af1f-6f7a7fc77ca0');
+                            url);
                       },
                     ),
                     IconButton(

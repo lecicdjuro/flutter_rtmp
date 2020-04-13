@@ -109,7 +109,7 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
     /// 终止活动
     private fun stopAction(): Boolean {
         try {
-            preVie?.stopRecord()
+//            preVie?.stopRecord()
             preVie?.stopStreaming()
 
         } catch (e: Exception) {
@@ -134,9 +134,6 @@ class RtmpManager(context: Context?) : MethodChannel.MethodCallHandler {
         try {
             if (!previewAction()) {
                 return false
-            }
-            if (preVie == null) {
-                _initPublisher()
             }
             preVie?.startStreaming(loger.rtmpUrl)
         } catch (e: Exception) {
