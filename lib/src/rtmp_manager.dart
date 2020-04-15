@@ -25,6 +25,7 @@ class RtmpManager {
 
   /// premission state
   bool _permissionEnable;
+
   bool get permissionEnable => _permissionEnable ?? false;
 
   /// permission check
@@ -75,7 +76,12 @@ class RtmpManager {
   /// 直播状态
   RtmpStatue _statue = RtmpStatue.preparing;
 
-  Future<RtmpResponse> _didCreated() async {
+  Future<void> _didCreated() async {
+    initConfig();
+    if (onCreated != null) onCreated();
+  }
+
+  Future<RtmpResponse> initConfig() async {
     if (_statue != RtmpStatue.preparing) return RtmpResponse.faile();
     Map res;
     try {
@@ -166,6 +172,7 @@ class RtmpManager {
 
   GlobalKey _globalKey = GlobalKey();
   Widget _platformView;
+
   Widget view() {
     if (_platformView == null) {
       print("[RTMP] get platformview");
