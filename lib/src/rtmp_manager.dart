@@ -85,10 +85,11 @@ class RtmpManager {
     if (_statue != RtmpStatue.preparing) return RtmpResponse.faile();
     Map res;
     try {
+      print('CONFIG ${config.toMap()}');
       res = await _configChannel.invokeMethod("initConfig", config.toMap());
+      print(res);
     } catch (e) {}
 
-    if (onCreated != null) onCreated();
     return RtmpResponse.fromData(res ?? {});
   }
 
