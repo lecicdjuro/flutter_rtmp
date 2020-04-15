@@ -15,10 +15,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 /// 直播控制器
 class RtmpManager {
-  RtmpManager({this.onCreated});
+  RtmpManager({this.onCreated, this.config});
 
   /// 视图加载回调,
   final VoidCallback onCreated;
+  RtmpConfig config;
 
   /// 配置
   MethodChannel _configChannel = MethodChannel(DEF_CAMERA_SETTING_CONFIG);
@@ -71,17 +72,17 @@ class RtmpManager {
   }
 
   /// 配置
-  final RtmpConfig config = RtmpConfig();
 
   /// 直播状态
   RtmpStatue _statue = RtmpStatue.preparing;
 
   Future<void> _didCreated() async {
-    initConfig();
+    _initConfig();
     if (onCreated != null) onCreated();
   }
 
-  Future<RtmpResponse> initConfig() async {
+  Future<RtmpResponse> _initConfig() async {
+    config ??= RtmpConfig();
     if (_statue != RtmpStatue.preparing) return RtmpResponse.faile();
     Map res;
     try {
